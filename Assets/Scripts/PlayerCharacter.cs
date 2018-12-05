@@ -13,12 +13,16 @@ public class PlayerCharacter : MonoBehaviour
     private Rigidbody2D rb2d;       //Store a reference to the Rigidbody2D component required to use 2D Physics.
     private int count;              //Integer to store the number of pickups collected so far.
 
+    [SerializeField]
+    private AudioClip pickupSound, winSound;
+    private AudioSource audioSource;
+
     // Use this for initialization
     void Start()
     {
         //Get and store a reference to the Rigidbody2D component so that we can access it.
         rb2d = GetComponent<Rigidbody2D>();
-
+        audioSource = GetComponent<AudioSource>();
         //Initialize count to zero.
         count = 0;
 
@@ -50,10 +54,14 @@ public class PlayerCharacter : MonoBehaviour
     {
         //Check the provided Collider2D parameter other to see if it is tagged "PickUp", if it is...
         if (other.gameObject.CompareTag("PickUp"))
-
+        {
+            audioSource.clip = pickupSound;
+            audioSource.Play();
             //... then set the other object we just collided with to inactive.
             other.gameObject.SetActive(false);
-
+        }
+        
+        
         //Add one to the current value of our count variable.
         count = count + 1;
 
@@ -69,8 +77,13 @@ public class PlayerCharacter : MonoBehaviour
 
         //Check if we've collected all 12 pickups. If we have...
         if (count >= 12)
+        {
+            audioSource.clip = winSound;
+            audioSource.Play();
             //... then set the text property of our winText object to "You win!"
             winText.text = "You win!";
+        }
+            
     }
 }
 
